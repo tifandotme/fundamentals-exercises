@@ -12,3 +12,4 @@ for (let index = 0; index < 5; index++) {
 }
 
 // When using var, index++ will also increment the callback function inside setTimeout
+//
