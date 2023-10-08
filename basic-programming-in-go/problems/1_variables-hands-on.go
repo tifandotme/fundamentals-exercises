@@ -48,7 +48,7 @@ type productsAnnualProfit = map[name]struct {
 	discount  int
 }
 
-func VariablesHandsOn() {
+func VariableHandsOn() {
 	var products = productsAnnualProfit{
 		"Product A": {100000, 200, 0},
 		"Product B": {67000, 12, 20},
