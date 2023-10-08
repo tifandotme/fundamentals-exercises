@@ -27,6 +27,10 @@ You need to return the annual gross profit value.
 Questions to mentor:
 The formula to calculate gross profit is the total revenue minus the cost of goods sold.
 
+1. Is the formula incorrect? because some results are negative. (see calculate2 function)
+2. Are discounts supposed to be treated as percentage? If yes:
+3. Shouldn't we calculate the discount first before calculating the total revenue? So that 20 becomes 0.2
+
 */
 
 package problems
