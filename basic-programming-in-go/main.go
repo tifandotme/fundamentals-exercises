@@ -3,7 +3,7 @@ package main
 import "digiwiki/problems"
 
 func main() {
-	problems.POSApp()
+	problems.RobotTranslator()
 }
 
 /*

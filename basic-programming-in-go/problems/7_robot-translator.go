@@ -13,6 +13,7 @@ The robots have three possible commands:
 R for turn right
 L for turn left
 A for advance (forward)
+
 For example, a valid commands would look like:
 
 RRAAALA
@@ -31,6 +32,9 @@ Move right 2 times
 Move advance 3 times
 Move left 1 time
 Move advance 1 time
+
+Questions to mentors:
+1. Is my error handling implementation correct?
 */
 
 package problems
@@ -38,7 +42,35 @@ package problems
 import (
 	"fmt"
 	"strings"
+	"errors"
+	"log"
 )
 
 func RobotTranslator() {
-	
+	var input string
+
+	fmt.Printf("Input robot commands (combination of R, L, or A): ")
+	fmt.Scanln(&input)
+
+	commands := strings.Split(input, "")
+
+	var amount int
+	for idx, val := range commands {
+		amount += 1
+
+		if idx == len(commands)-1 || commands[idx+1] != val {
+			switch val {
+			case "R":
+				fmt.Printf("Move right %d times\n", amount)
+			case "L":
+				fmt.Printf("Move left %d times\n", amount)
+			case "A":
+				fmt.Printf("Move advance %d times\n", amount)
+			default:
+				log.Fatal(errors.New("invalid command"))
+			}
+
+			amount = 0
+		}
+	}
+}

@@ -43,7 +43,7 @@ type errorCodes struct {
 	description string
 }
 
-var errors = []errorCodes{
+var errorData = []errorCodes{
 	{0, "No Error"},
 	{1, "Incorrect input"},
 	{2, "The server encounters internal error"},
@@ -54,7 +54,7 @@ var errors = []errorCodes{
 func ApiErrorCode() {
 
 	// Example with map:
-	// errors := map[string]struct {
+	// error := map[string]struct {
 	// 	{0, "No Error"},
 	// 	{1, "Incorrect input"},
 	// 	{2, "The server encounters internal error"},
@@ -92,7 +92,7 @@ func ApiErrorCode() {
 }
 
 func accessErrorCodes(code int) (description string) {
-	for _, v := range errors {
+	for _, v := range errorData {
 		if v.code == code {
 			description = v.description
 		}
