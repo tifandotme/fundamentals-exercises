@@ -52,17 +52,7 @@ var errorData = []errorCodes{
 }
 
 func ApiErrorCode() {
-
-	// Example with map:
-	// error := map[string]struct {
-	// 	{0, "No Error"},
-	// 	{1, "Incorrect input"},
-	// 	{2, "The server encounters internal error"},
-	// 	{4, "The server is overloaded by too much traffic"},
-	// 	{8, "You are not authorized to proceed with the input"},
-	// }
-
-	var input uint8
+	var input int
 	var result []string
 
 	fmt.Print("Input: ")
@@ -70,25 +60,27 @@ func ApiErrorCode() {
 
 	if input == 0 {
 		result = append(result, accessErrorCodes(0))
-	}
-	if input >= 8 {
-		result = append(result, accessErrorCodes(8))
-		input -= 8
-	}
-	if input >= 4 {
-		result = append(result, accessErrorCodes(4))
-		input -= 4
-	}
-	if input >= 2 {
-		result = append(result, accessErrorCodes(2))
-		input -= 2
-	}
-	if input >= 1 {
-		result = append(result, accessErrorCodes(1))
-		input -= 1
+	} else {
+		for i := len(errorData) - 1; i > 0; i-- {
+			code := errorData[i].code
+
+			if input >= code {
+				result = append(result, accessErrorCodes(code))
+				input -= code
+			}
+		}
 	}
 
-	fmt.Printf("%+q\n", result)
+	// Print result
+	fmt.Printf("[")
+	for i := len(result) - 1; i >= 0; i-- {
+		fmt.Printf("\"%s\"", result[i])
+
+		if i != 0 {
+			fmt.Printf(", ")
+		}
+	}
+	fmt.Printf("]\n")
 }
 
 func accessErrorCodes(code int) (description string) {

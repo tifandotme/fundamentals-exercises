@@ -103,6 +103,9 @@ import (
 	"strings"
 )
 
+var winCountX int
+var winCountO int
+
 func TicTacToe() {
 	var input string
 	fmt.Printf("Enter the board (X, O, or -): ")
@@ -115,9 +118,16 @@ func TicTacToe() {
 
 	marks := strings.Split(input, "")
 
-	var winCountX int
-	var winCountO int
+	analyzeXAxis(marks)
 
+	analyzeYAxis(marks)
+
+	analyzeDiagonals(marks)
+
+	printResult()
+}
+
+func analyzeXAxis(marks []string) {
 	for i := 0; i < 3; i++ {
 		xAxis := marks[i*3 : (i*3)+3]
 
@@ -128,7 +138,9 @@ func TicTacToe() {
 			winCountO++
 		}
 	}
+}
 
+func analyzeYAxis(marks []string) {
 	for i := 0; i < 3; i++ {
 		yAxis := []string{marks[i], marks[i+3], marks[i+6]}
 
@@ -139,7 +151,9 @@ func TicTacToe() {
 			winCountO++
 		}
 	}
+}
 
+func analyzeDiagonals(marks []string) {
 	diagonal := [][]string{
 		{marks[0], marks[4], marks[8]},
 		{marks[2], marks[4], marks[6]},
@@ -153,11 +167,14 @@ func TicTacToe() {
 			winCountO++
 		}
 	}
+}
 
+func printResult() {
+	// Debugging purpose, delete this
 	fmt.Println(winCountX)
 	fmt.Println(winCountO)
 
-	if winCountX >= 1 && winCountO >= 1 {
+	if winCountX > 1 || winCountO > 1 || winCountX >= 1 && winCountO >= 1 {
 		fmt.Println("Invalid game board")
 		return
 	}
@@ -172,19 +189,4 @@ func TicTacToe() {
 	} else {
 		fmt.Println("O Wins!")
 	}
-	// var board [3][3]string
-
-	// for i := 0; i < 3; i++ {
-	// 	for j := 0; j < 3; j++ {
-	// 		mark := marks[i+(j*3)]
-
-	// 		if mark == "-" {
-	// 			// Scenario 1
-	// 			fmt.Println("Game still in progress!")
-	// 			return
-	// 		}
-
-	// 		board[i][j] = mark
-	// 	}
-	// }
 }

@@ -1,9 +1,10 @@
 package main
 
+// import "fmt"
 import "digiwiki/problems"
 
 func main() {
-	problems.TicTacToe()
+	problems.RobotTranslator()
 }
 
 /*

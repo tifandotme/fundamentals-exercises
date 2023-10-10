@@ -37,7 +37,6 @@ package problems
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type name = string
@@ -45,7 +44,7 @@ type name = string
 type productsAnnualProfit = map[name]struct {
 	price     int
 	totalSold int
-	discount  int
+	discount  float64
 }
 
 func VariableHandsOn() {
@@ -70,31 +69,14 @@ func calculate(products productsAnnualProfit) {
 	var sum int
 
 	for key, val := range products {
-		discount := 1.0 - (float64(val.discount) / 100.0)
+		discount := val.discount / 100.0
 		discountedPrice := int(float64(val.price) * discount)
 
-		currSum := val.price * val.totalSold
-		if discount < 1.0 {
-			currSum -= discountedPrice * val.totalSold
-		}
+		currSum := (val.price * val.totalSold) - (discountedPrice * val.totalSold)
 		sum += currSum
 
-		fmt.Printf("%s: Rp %s\n", key, strconv.Itoa(currSum))
+		fmt.Printf("%s: Rp %d\n", key, currSum)
 	}
 
-	fmt.Printf("Sum: Rp %s\n", strconv.Itoa(sum))
-}
-
-// Calculate annual gross profit of all products (without considering discount)
-func calculateAlt(products productsAnnualProfit) {
-	var sum int
-
-	for key, val := range products {
-		currSum := (val.price * val.totalSold) - (val.price * val.discount * val.totalSold)
-		sum += currSum
-
-		fmt.Printf("%s: Rp %s\n", key, strconv.Itoa(currSum))
-	}
-
-	fmt.Printf("Sum: Rp %s\n", strconv.Itoa(sum))
+	fmt.Printf("Sum: Rp %d\n", sum)
 }
