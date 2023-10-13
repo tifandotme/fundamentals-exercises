@@ -29,7 +29,11 @@ Questions to mentor:
 
 package problems
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
 
 type purchaseAmount struct {
 	qty      int
@@ -47,7 +51,7 @@ type product struct {
 	price   int
 }
 
-var data = []product{
+var products = []product{
 	{"00001", "Coca-cola", 3000},
 	{"00002", "Sprite", 2500},
 	{"00003", "Fanta", 2500},
@@ -55,10 +59,81 @@ var data = []product{
 	{"00005", "Coffee", 5000},
 }
 
-func POSApp() {
-	receipt := calculatePurchase([]string{"00001", "00005"})
+var scanned = []string{}
 
-	generateReceiptText(receipt)
+func POSApp() {
+	for {
+		clear()
+		fmt.Println("POS App")
+		fmt.Println()
+		fmt.Printf("Scanned barcode: %v\n", scanned)
+		fmt.Println()
+		fmt.Println("1. Scan")
+		fmt.Println("2. Print receipt")
+		fmt.Println()
+		fmt.Println("0. Exit")
+		fmt.Println()
+
+		input := prompt("Input (number): ")
+
+		switch input {
+		case 1:
+			var recentlyAdded string
+
+			for {
+				clear()
+
+				for idx, val := range products {
+					fmt.Printf("%d. %s %s (Rp. %s)\n", idx+1, val.barcode, val.name, strconv.Itoa(val.price))
+				}
+				fmt.Println()
+				fmt.Println("0. Back to menu")
+				fmt.Println()
+				if recentlyAdded != "" {
+					fmt.Printf("Added %s!\n\n", recentlyAdded)
+				}
+				input := prompt("Scan product (pick the product index): ")
+
+				if input == 0 {
+					break
+				}
+
+				scanned = append(scanned, products[input-1].barcode)
+				recentlyAdded = products[input-1].name
+			}
+
+		case 2:
+			receipt := calculatePurchase(scanned)
+			fmt.Println(receipt)
+
+			fmt.Println()
+			fmt.Println("0. Back to menu")
+			fmt.Println()
+
+			input := prompt("Input: ")
+
+			if input == 0 {
+				break
+			}
+			// TODO: finish this
+
+		case 0:
+			fmt.Println("Stopping program.")
+			os.Exit(0)
+		}
+	}
+}
+
+func prompt(label string) (input int) {
+	fmt.Print(label)
+	_, err := fmt.Scanln(&input)
+
+	if err != nil {
+		fmt.Println("Invalid input")
+		os.Exit(0)
+	}
+
+	return
 }
 
 func calculatePurchase(barcode []string) (receipt purchaseSummary) {
@@ -68,10 +143,9 @@ func calculatePurchase(barcode []string) (receipt purchaseSummary) {
 	}
 
 	for _, val := range barcode {
-		product := searchProduct(val)
+		product := getProduct(val)
 
 		if products, ok := receipt.products[product.name]; ok {
-			fmt.Println("ok")
 			products.qty += 1
 			products.subtotal += product.price
 
@@ -87,15 +161,19 @@ func calculatePurchase(barcode []string) (receipt purchaseSummary) {
 }
 
 func generateReceiptText(receipt purchaseSummary) {
-	// wait for unit test
+	// TODO
 }
 
-func searchProduct(barcode string) (product product) {
-	for _, val := range data {
+func getProduct(barcode string) (product product) {
+	for _, val := range products {
 		if val.barcode == barcode {
 			return val
 		}
 	}
 
 	return
+}
+
+func clear() {
+	fmt.Print("\033[H\033[2J")
 }

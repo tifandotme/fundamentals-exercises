@@ -100,6 +100,8 @@ package problems
 
 import (
 	"fmt"
+	"os"
+	"regexp"
 	"strings"
 )
 
@@ -107,16 +109,7 @@ var winCountX int
 var winCountO int
 
 func TicTacToe() {
-	var input string
-	fmt.Printf("Enter the board (X, O, or -): ")
-	fmt.Scanln(&input)
-
-	if len(input) != 9 {
-		fmt.Println("Input a total of 9 marks!")
-		return
-	}
-
-	marks := strings.Split(input, "")
+	marks := promptBoard()
 
 	analyzeXAxis(marks)
 
@@ -127,66 +120,85 @@ func TicTacToe() {
 	printResult()
 }
 
-func analyzeXAxis(marks []string) {
+func promptBoard() (marks string) {
+	fmt.Print("Enter the board (X, O, or -): ")
+	if _, err := fmt.Scanln(&marks); err != nil {
+		fmt.Println("Invalid input")
+		os.Exit(0)
+	}
+
+	isLengthCorrect := len(marks) != 9
+	isMarksValid := regexp.MustCompile(`^[XO-]+$`).MatchString(marks)
+
+	if !isMarksValid || isLengthCorrect {
+		// Assumption: when user input an invalid mark, stop the program.
+		fmt.Println("Invalid marks. Input a total of 9 marks of either X, O, or -")
+		os.Exit(0)
+	}
+
+	if strings.Contains(marks, "-") {
+		// State 4
+		fmt.Println("Game still in progress!")
+		os.Exit(0)
+	}
+
+	return
+}
+
+func analyzeXAxis(marks string) {
 	for i := 0; i < 3; i++ {
 		xAxis := marks[i*3 : (i*3)+3]
 
-		switch strings.Join(xAxis, "") {
-		case "XXX":
-			winCountX++
-		case "OOO":
-			winCountO++
-		}
+		checkLine(xAxis)
 	}
 }
 
-func analyzeYAxis(marks []string) {
+func analyzeYAxis(marks string) {
 	for i := 0; i < 3; i++ {
-		yAxis := []string{marks[i], marks[i+3], marks[i+6]}
+		yAxis := marks[i:i+1] + marks[i+3:i+4] + marks[i+6:i+7]
 
-		switch strings.Join(yAxis, "") {
-		case "XXX":
-			winCountX++
-		case "OOO":
-			winCountO++
-		}
+		checkLine(yAxis)
 	}
 }
 
-func analyzeDiagonals(marks []string) {
-	diagonal := [][]string{
-		{marks[0], marks[4], marks[8]},
-		{marks[2], marks[4], marks[6]},
+func analyzeDiagonals(marks string) {
+	diagonalAxis := []string{
+		marks[:1] + marks[4:5] + marks[8:],
+		marks[2:3] + marks[4:5] + marks[6:7],
 	}
 
-	for _, v := range diagonal {
-		switch strings.Join(v, "") {
-		case "XXX":
-			winCountX++
-		case "OOO":
-			winCountO++
-		}
+	for _, val := range diagonalAxis {
+		checkLine(val)
 	}
 }
 
 func printResult() {
-	// Debugging purpose, delete this
-	fmt.Println(winCountX)
-	fmt.Println(winCountO)
-
 	if winCountX > 1 || winCountO > 1 || winCountX >= 1 && winCountO >= 1 {
+		// State 5
 		fmt.Println("Invalid game board")
 		return
 	}
 
 	if winCountX == 0 && winCountO == 0 {
+		// State 3
 		fmt.Println("It's a draw!")
 		return
 	}
 
 	if winCountX == 1 {
+		// State 1
 		fmt.Println("X Wins!")
 	} else {
+		// State 2
 		fmt.Println("O Wins!")
+	}
+}
+
+func checkLine(line string) {
+	switch line {
+	case "XXX":
+		winCountX++
+	case "OOO":
+		winCountO++
 	}
 }

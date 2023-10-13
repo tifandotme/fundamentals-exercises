@@ -18,18 +18,18 @@ import (
 	"fmt"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+	"os"
 	"sort"
 	"strings"
 )
 
-// Dictionary with ID as key and EN as value
-var dictionary = map[string]string{
-	"makan": "eat",
-	"tidur": "sleep",
-}
-
 func IndonesiaToEnglishDictionary() {
-forLoop:
+	// Dictionary with ID as key and EN as value
+	var dictionary = map[string]string{
+		"makan": "eat",
+		"tidur": "sleep",
+	}
+
 	for {
 		fmt.Printf(`ID to EN Dictionary
 Menu:
@@ -39,7 +39,7 @@ Menu:
 4. Print dictionary
 0. Exit`)
 
-		var input int8
+		var input uint8
 
 		fmt.Printf("\nInput (number): ")
 		fmt.Scanln(&input)
@@ -51,12 +51,11 @@ Menu:
 			fmt.Printf("Word to translate (ID): ")
 			fmt.Scanln(&word)
 
-			val, ok := dictionary[word]
-
 			clearScreen()
-			if ok {
-				fmt.Printf("ID: %s\n", titleCase(word))
-				fmt.Printf("EN: %s\n\n", titleCase(val))
+
+			if val, ok := dictionary[word]; ok {
+				fmt.Printf("ID: %s\n", convertToTitleCase(word))
+				fmt.Printf("EN: %s\n\n", convertToTitleCase(val))
 			} else {
 				fmt.Printf("Sorry, \"%s\" is not found in dictionary\n\n", word)
 			}
@@ -67,6 +66,8 @@ Menu:
 			fmt.Printf("Word to be added: ")
 			fmt.Scanln(&word)
 
+			clearScreen()
+
 			// Trim leading and trailing whitespace and convert to lowercase
 			word = strings.TrimSpace(strings.ToLower(word))
 
@@ -75,7 +76,6 @@ Menu:
 
 			// When "#" is not present, break out of switch
 			if hashIndex == -1 {
-				clearScreen()
 				fmt.Printf("Word must be separated with # char\n\n")
 				break
 			}
@@ -83,9 +83,12 @@ Menu:
 			id := word[:hashIndex]
 			en := word[hashIndex+1:]
 
-			dictionary[id] = en
+			if _, ok := dictionary[id]; ok {
+				fmt.Printf("Cannot add existing word \"%s\"\n\n", id)
+				break
+			}
 
-			clearScreen()
+			dictionary[id] = en
 			fmt.Printf("New word succesfully added\n\n")
 
 		case 3: // Remove word
@@ -95,43 +98,50 @@ Menu:
 			fmt.Scanln(&word)
 
 			clearScreen()
-			if _, ok := dictionary[word]; ok {
-				delete(dictionary, word)
-				fmt.Printf("\"%s\" has been removed\n\n", word)
-			} else {
+
+			if _, ok := dictionary[word]; !ok {
 				fmt.Printf("Sorry, \"%s\" is not found in dictionary\n\n", word)
+				break
 			}
+
+			delete(dictionary, word)
+			fmt.Printf("\"%s\" has been removed\n\n", word)
 
 		case 4: // Print dictionary
-			// Sort dictionary by key
-			keys := make([]string, 0, len(dictionary))
-			for k := range dictionary {
-				keys = append(keys, k)
-			}
-			sort.Strings(keys)
+			keys := sortDictionary(dictionary)
 
 			clearScreen()
+
 			fmt.Println(`ID to EN Dictionary:`)
-			for idx, k := range keys {
-				fmt.Printf("%d. %s: %s\n", idx+1, titleCase(k), titleCase(dictionary[k]))
+			for idx, val := range keys {
+				fmt.Printf("%d. %s: %s\n", idx+1, convertToTitleCase(val), convertToTitleCase(dictionary[val]))
 			}
-			fmt.Println("")
+			fmt.Printf("\n")
 
 		case 0: // Exit
-			break forLoop
+			os.Exit(0)
 
 		default:
-			clearScreen()
 			fmt.Printf("Invalid input\n\n")
 		}
 	}
 }
 
-// Convert string to title case
-func titleCase(str string) string {
+func convertToTitleCase(str string) string {
 	caser := cases.Title(language.AmericanEnglish)
 
 	return caser.String(str)
+}
+
+func sortDictionary(dictionary map[string]string) (keys []string) {
+	keys = make([]string, 0, len(dictionary))
+
+	for k := range dictionary {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	return
 }
 
 func clearScreen() {

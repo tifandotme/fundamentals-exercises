@@ -1,4 +1,4 @@
-package problems
+package bootcamp
 
 import "fmt"
 
@@ -45,7 +45,7 @@ func StudentManagementSystem() {
 				fmt.Printf("ID: %d\n", v.id)
 				fmt.Printf("Name: %s\n", v.name)
 				fmt.Printf("Age: %d\n", v.age)
-				fmt.Printf("Grade: %f\n\n", v.grade)
+				fmt.Printf("Grade: %.2f\n\n", v.grade)
 			}
 
 		case 3:
@@ -56,7 +56,7 @@ func StudentManagementSystem() {
 
 			average := sum / float64(len(data))
 
-			fmt.Printf("Average: %f", average)
+			fmt.Printf("Average: %.2f\n", average)
 		case 0:
 			return
 
@@ -64,5 +64,4 @@ func StudentManagementSystem() {
 			fmt.Println("Wrong choice buckaroo")
 		}
 	}
-
 }
