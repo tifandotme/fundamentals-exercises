@@ -1,16 +1,7 @@
 package main
 
-// import "fmt"
-import "digiwiki/problems"
+import "bootcamp/problems"
 
 func main() {
-	problems.RobotTranslator()
+	problems.TicTacToe()
 }
-
-/*
-In Go, function names that start with an uppercase letter will be exported,
-while function names that start with a lowercase letter will not be exported.
-
-Exported functions can be accessed from other packages,
-while unexported functions can only be accessed from the same package.
-*/
