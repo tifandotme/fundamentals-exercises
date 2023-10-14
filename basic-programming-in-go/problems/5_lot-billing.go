@@ -1,23 +1,3 @@
-/*
-Objectives
-Able to use the conditional statements
-
-Description
-You are tasked to create a program to calculate parking fee.
-
-Parking Price List
-
-Duration	   Motorcycle	  Car
-First 1 hr	 3000					7000
-After 1 hr	 2000/hour		5000/hour
-
-If vehicle parked more than 24 hours then they will be an extra charged, as below:
-
-Vehicle Type		Extra Charge
-Motorcycle			+20000
-Car							+50000
-*/
-
 package problems
 
 import (
@@ -65,12 +45,10 @@ func promptVehicleType() (vehicle string) {
 	}
 
 	if input == 1 {
-		vehicle = "motorcycle"
-	} else {
-		vehicle = "car"
+		return "motorcycle"
 	}
 
-	return
+	return "car"
 }
 
 func promptParkingDuration() (duration int) {

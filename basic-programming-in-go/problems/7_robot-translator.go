@@ -4,46 +4,56 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 )
 
 func RobotTranslator() {
-	var input string
-
-	fmt.Printf("Input robot commands (combination of R, L, or A): ")
-	fmt.Scanln(&input)
-
-	commands := strings.Split(input, "")
-
+	var commands string
 	var count int
 
-	for idx, val := range commands {
+	fmt.Printf("Input robot commands (combination of R, L, or A): ")
+	fmt.Scanln(&commands)
+
+	for idx, command := range commands {
 		count++
 
-		if idx == len(commands)-1 || commands[idx+1] != val {
+		isLastCommand := idx == len(commands)-1
+		currCommand := string(command)
+		var nextCommand string
+
+		// Prevent out of range error. Only get next command if current command is not the last command.
+		if !isLastCommand {
+			nextCommand = commands[idx+1 : idx+2]
+		}
+
+		if isLastCommand || currCommand != nextCommand {
 			var translation string
 
-			switch val {
+			switch currCommand {
 			case "R":
-				translation = "Move right " + strconv.Itoa(count) + " time"
+				translation = formatTranslation("right", count)
 			case "L":
-				translation = "Move left " + strconv.Itoa(count) + " time"
+				translation = formatTranslation("left", count)
 			case "A":
-				translation = "Move advance " + strconv.Itoa(count) + " time"
+				translation = formatTranslation("advance", count)
 			default:
 				// Assumption: when user input an invalid command, stop program.
 				fmt.Printf("Invalid command. Stopping program.\n")
 				os.Exit(0)
 			}
 
-			if count > 1 {
-				translation += "s"
-			}
-
-			fmt.Printf("%s\n", translation)
+			fmt.Println(translation)
 
 			count = 0
 		}
-
 	}
+}
+
+func formatTranslation(direction string, count int) (translation string) {
+	translation = fmt.Sprintf("Move %s %s time", direction, strconv.Itoa(count))
+
+	if count > 1 {
+		translation += "s"
+	}
+
+	return
 }
