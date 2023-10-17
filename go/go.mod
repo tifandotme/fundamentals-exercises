@@ -1,4 +1,4 @@
-module bootcamp
+module tifan.me/digiwiki
 
 go 1.21.2
 
