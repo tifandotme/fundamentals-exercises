@@ -55,15 +55,9 @@ func LastUniqueCharacter() {
 
 func promptInput() (input string) {
 	fmt.Print("Input: ")
-	_, err := fmt.Scanln(&input)
-	if err != nil {
-		fmt.Println("Invalid input")
-		os.Exit(0)
-	}
+	fmt.Scanln(&input)
 
-	isValid := regexp.MustCompile(`^[a-z]+$`).MatchString(input)
-
-	if !isValid {
+	if !regexp.MustCompile(`^[a-z]+$`).MatchString(input) {
 		fmt.Println("Invalid input")
 		os.Exit(0)
 	}

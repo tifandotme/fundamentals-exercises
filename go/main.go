@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	exercise.ReverseNonVowelsOfString()
+	exercise.ForestFire()
 }
