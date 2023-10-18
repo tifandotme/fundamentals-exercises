@@ -2,6 +2,7 @@ package exercise
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -36,40 +37,47 @@ func PrefixNotation() {
 	// input := "+ 1 2"
 
 	// Example 2
-	input := "+ 1 * 2 + 3 4"
+	// input := "+ 1 * 2 + 3 4"
+	input := "/ 1 * 2 + 3 4"
 
 	// input := "+ + 1 * 2 3 4"
 
 	// input := "+ 3 4"
+
+	fmt.Println(input)
 
 	input = strings.ReplaceAll(input, " ", "")
 
 	bucket := Stack{}
 
 	for i := len(input) - 1; i >= 0; i-- {
-		switch input[i] {
-		case '+':
-			result := toInteger(bucket.Pop()) + toInteger(bucket.Pop())
+		if isOperator(string(input[i])) {
+			leftOperand := toInteger(bucket.Pop())
+			rightOperand := toInteger(bucket.Pop())
+			result := 0
+
+			switch input[i] {
+			case '+':
+				result = leftOperand + rightOperand
+			case '-':
+				result = leftOperand - rightOperand
+			case '*':
+				result = leftOperand * rightOperand
+			case '/':
+				result = rightOperand / leftOperand
+			}
 
 			bucket.Push(toString(result))
-		case '-':
-			result := toInteger(bucket.Pop()) - toInteger(bucket.Pop())
-
-			bucket.Push(toString(result))
-		case '*':
-			result := toInteger(bucket.Pop()) * toInteger(bucket.Pop())
-
-			bucket.Push(toString(result))
-		case '/':
-			result := toInteger(bucket.Pop()) / toInteger(bucket.Pop())
-
-			bucket.Push(toString(result))
-		default:
+		} else {
 			bucket.Push(string(input[i]))
 		}
 	}
 
 	bucket.Print()
+}
+
+func isOperator(char string) bool {
+	return regexp.MustCompile(`^[-+*\/]+`).MatchString(char)
 }
 
 func toInteger(char string) int {
