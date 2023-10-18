@@ -32,9 +32,15 @@ func (s *Stack) Print() {
 }
 
 func PrefixNotation() {
-	// input := "+ + 1 * 2 3 4"
-	// input := "+ 3 4"
+	// Example 1
+	// input := "+ 1 2"
+
+	// Example 2
 	input := "+ 1 * 2 + 3 4"
+
+	// input := "+ + 1 * 2 3 4"
+
+	// input := "+ 3 4"
 
 	input = strings.ReplaceAll(input, " ", "")
 
