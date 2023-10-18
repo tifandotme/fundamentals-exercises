@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	exercise.ForestFire()
+	exercise.PrefixNotation()
 }
