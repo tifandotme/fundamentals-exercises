@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	exercise.PrefixNotation()
+	exercise.FixTheEdgeCase()
 }
