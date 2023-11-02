@@ -1,0 +1,76 @@
+/*
+Evaluating Infix Notation
+After working on evaluating the Polish Notation, now you are tasked to evaluate the mathematical expression using the Infix notation.
+
+For example: 1 + 2 * ( 3 + 4 )
+
+The convention is to perform operations in this order:
+
+Parentheses
+Exponentiation
+Multiplication and Division
+Addition and Subtraction
+The order of the operations will be:
+
+1 + 2 * ( 3 + 4 )
+1 + 2 * ( 7 )
+1 + 14
+15
+The input will be a string in Infix Notation, which contains:
+
+mathematical operator symbols such as: +, -, *, /, (, and )
+positive and negative numbers between -2147483648 and 2147483647 such as: 1, -2, 3, 5000
+the operators and operands will always be separated by a space ( )
+Your output should be the result of the Infix Notation evaluation.
+
+Examples
+
+Example 1
+
+Input: 1 + 2
+
+Output: 3
+
+Example 2
+
+Input: 1 + 2 * ( 3 + 4 )
+
+Output: 15
+*/
+
+package exercise
+
+import (
+	"fmt"
+	"strings"
+)
+
+func InfixNotation() {
+	input := "1 + 2 * ( 3 + 4 )"
+
+	input = strings.ReplaceAll(input, " ", "")
+
+	operands := Stack{}
+	operators := Stack{}
+
+	for _, char := range input {
+		// fmt.Print(string(char))
+		switch char {
+		case '(':
+			operands.Push(string(char))
+		}
+	}
+}
+
+func precedence(char rune) int {
+	switch char {
+	case '+', '-':
+		return 1
+	case '*', '/':
+		return 2
+	// case '^':
+	// 	return 3
+	default:
+		return -1
+	}
+}
